@@ -1,1 +1,19 @@
 # Write Docker Compose for Service 2
+
+version: '3.8'
+services:
+  service2:
+    build: 
+      context: .
+      dockerfile: Dockerfile.prod
+    image: service2:production
+    networks:
+      - mynetwork
+    ports:
+      - 8081:8081
+    user: "${APP_USER}"
+    command: ["./service2"]
+
+networks:
+  pleno-network:
+    driver: bridge

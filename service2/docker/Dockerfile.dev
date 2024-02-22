@@ -4,7 +4,7 @@
 # Dev
 
 FROM rust:1.54 as Build
-RUN USER root cargo new service1
+RUN USER root cargo new service2
 WORKDIR /service1
 COPY  ./Cargo.toml ./Cargo.toml
 RUN cargo build --release \
@@ -27,7 +27,7 @@ ENV APP_USER=appuser
 RUN groupadd $APP_USER && useradd -g $APP_USER $APP_USER \
     && mkdir -p ${APP}
 
-COPY --from=Build /service1/target/release/service1 ${APP}/service1
+COPY --from=Build /service1/target/release/service2 ${APP}/service2
 
 RUN chown -R $APP_USER:$APP_USER ${APP}
 
@@ -35,4 +35,4 @@ USER ${APP_USER}
 
 WORKDIR ${APP}
 
-CMD ["./service1"]
+CMD ["./service2"]
