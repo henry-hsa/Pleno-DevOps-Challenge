@@ -2,3 +2,37 @@
 # 2 Stages
 # Build
 # Dev
+
+FROM rust:1.54 as Build
+RUN USER:root cargo new service1
+WORKDIR ./service1
+COPY  ./Cargo.toml ./Cargo.toml
+RUN cargo build --release \
+    && rm src/*.rs
+
+ADD . ./
+RUN cargo build --release
+
+
+FROM debian:buster-slim as Dev
+
+ARG APP=/usr/src/app
+
+RUN apt-get update && apt-get install -y ca-certificates 
+
+EXPOSE 8081
+
+ENV APP_USER=appuser
+
+RUN groupadd $APP_USER && useradd -g $APP_USER $APP_USER \
+    && mkdir -p ${APP}
+
+COPY --from=Build /service1/target/release/service1 ${APP}/service1
+
+RUN chown -R $APP_USER:$APP_USER ${APP}
+
+USER ${APP_USER}
+
+WORKDIR ${APP}
+
+CMD ["./service1"]
