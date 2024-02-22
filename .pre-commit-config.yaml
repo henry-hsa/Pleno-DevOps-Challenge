@@ -1,1 +1,13 @@
 # Write the pre-commit config for CI and local development environment
+
+default_language_version: python3.11
+repos:
+-   repo: file://.
+    hooks:
+    -   id: check-yaml
+        types: [yaml]
+    -   id: end-of-file-fixer
+        types: [file]
+    -   id: trailing-whitespace
+        types: [file]
+  
