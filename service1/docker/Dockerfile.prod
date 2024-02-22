@@ -20,7 +20,7 @@ ARG APP=/usr/src/app
 
 RUN apt-get update && apt-get install -y ca-certificates 
 
-EXPOSE 8081
+EXPOSE 8080
 
 ENV APP_USER=appuser
 
