@@ -3,15 +3,16 @@
 # Build
 # Dev
 
-FROM rust:1.54 as Build
-RUN USER root cargo new service2
-WORKDIR /service1
-COPY  ./Cargo.toml ./Cargo.toml
+FROM rust:1.76-buster as Build
+RUN  cargo new service2
+WORKDIR /service2
+COPY  ./Cargo.toml .
+COPY  ./src/main.rs .
 RUN cargo build --release \
     && rm src/*.rs
 
 ADD . ./
-RUN cargo build --release
+RUN cargo build --release 
 
 
 FROM debian:buster-slim as Dev
@@ -27,7 +28,7 @@ ENV APP_USER=appuser
 RUN groupadd $APP_USER && useradd -g $APP_USER $APP_USER \
     && mkdir -p ${APP}
 
-COPY --from=Build /service1/target/release/service2 ${APP}/service2
+COPY --from=Build /service2/target/release/service2 ${APP}/service2
 
 RUN chown -R $APP_USER:$APP_USER ${APP}
 

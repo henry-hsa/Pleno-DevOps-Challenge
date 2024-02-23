@@ -3,12 +3,13 @@
 # Build
 # Prod
 
-FROM rust:1.54 as Build
-RUN USER root cargo new service1
+FROM rust:1.76-buster as Build
+RUN cargo new service1
 WORKDIR /service1
-COPY  ./Cargo.toml ./Cargo.toml
+COPY  ./Cargo.toml .
+COPY ./src/main.rs .
 RUN cargo build --release \
-    && rm src/*.rs
+    && rm src/*.rs target/release/deps/service1*
 
 ADD . ./
 RUN cargo build --release

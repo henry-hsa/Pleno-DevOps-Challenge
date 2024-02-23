@@ -3,17 +3,17 @@
 version: '3.8'
 services:
   service1:
-    build: 
-      context: .
-      dockerfile: Dockerfile.prod
-    image: service1:production
+    build:
+      context: /service1
+    container_name: service1-production  
+    image: service1-production
     networks:
       - pleno-network
     ports:
       - 8080:8080
-    user: "${APP_USER}"
     command: ["./service1"]
-
+    
 networks:
   pleno-network:
     driver: bridge
+    external: true

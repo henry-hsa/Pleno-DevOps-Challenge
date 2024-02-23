@@ -3,17 +3,22 @@
 version: '3.8'
 services:
   service2:
-    build: 
-      context: .
-      dockerfile: Dockerfile.prod
-    image: service2:production
+    build:
+      context: /service2
+    container_name: service2-production  
+    image: service1-production
     networks:
-      - mynetwork
+      pleno-network: 
+        ipv4_address: 172.18.0.3
     ports:
       - 8081:8081
-    user: "${APP_USER}"
-    command: ["./service2"]
-
+    command: ["./service1"]
+    
+    
 networks:
   pleno-network:
     driver: bridge
+    external: true
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
