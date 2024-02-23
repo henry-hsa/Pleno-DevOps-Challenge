@@ -6,13 +6,13 @@ services:
     build:
       context: /service2
     container_name: service2-production  
-    image: service1-production
+    image: service2-production
     networks:
       pleno-network: 
         ipv4_address: 172.18.0.3
     ports:
       - 8081:8081
-    command: ["./service1"]
+    command: ["./service2"]
     
     
 networks:

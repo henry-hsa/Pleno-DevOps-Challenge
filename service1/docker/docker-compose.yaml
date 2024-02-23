@@ -8,12 +8,17 @@ services:
     container_name: service1-production  
     image: service1-production
     networks:
-      - pleno-network
+      pleno-network: 
+       ipv4_address: 172.18.0.2
     ports:
       - 8080:8080
     command: ["./service1"]
+    
     
 networks:
   pleno-network:
     driver: bridge
     external: true
+    ipam:
+      config:
+        - subnet: 172.18.0.0/16
