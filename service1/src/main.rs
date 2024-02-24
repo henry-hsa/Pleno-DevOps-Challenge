@@ -1,4 +1,3 @@
-
 use actix_web::{get, App, Error, HttpResponse, HttpServer, Responder};
 
 use actix_cors::Cors;
@@ -62,5 +61,4 @@ mod tests {
         let body = test::read_body(resp).await;
         assert_eq!(body, "Hello world in service 1!");
     }
- }
- 
+}
