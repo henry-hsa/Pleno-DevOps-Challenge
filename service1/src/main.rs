@@ -1,5 +1,6 @@
 
-use actix_web::{get, App, HttpResponse, HttpServer, Responder, Error};
+use actix_web::{get, App, Error, HttpResponse, HttpServer, Responder};
+
 use actix_cors::Cors;
 use awc::Client;
 use std::time::Duration;
@@ -13,7 +14,7 @@ async fn hello() -> impl Responder {
 }
 
 #[get("/ping")]
-async fn ping_service2() -> Result<HttpResponse, Error>  {
+async fn ping_service2() -> Result<HttpResponse, Error> {
     let client = Client::new();
 
     for _ in 0..MAX_RETRIES {
@@ -21,25 +22,23 @@ async fn ping_service2() -> Result<HttpResponse, Error>  {
             Ok(mut response) => {
                 let body = response.body().await?;
                 return Ok(HttpResponse::Ok().body(body));
-            },
+            }
             Err(_) => {
                 tokio::time::sleep(Duration::from_secs(RETRY_DELAY)).await;
             }
         }
     }
 
-    Err(actix_web::error::ErrorInternalServerError("Service2 is not responding"))
+    Err(actix_web::error::ErrorInternalServerError(
+        "Service2 is not responding",
+    ))
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
-        let cors = Cors::default()
-            .allowed_origin_fn(|_, _| true);
-        App::new()
-            .wrap(cors)
-            .service(hello)
-            .service(ping_service2)
+        let cors = Cors::default().allowed_origin_fn(|_, _| true);
+        App::new().wrap(cors).service(hello).service(ping_service2)
     })
     .bind("0.0.0.0:8080")?
     .run()
