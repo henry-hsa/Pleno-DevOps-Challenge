@@ -1,2 +1,41 @@
 # Write Docker Compose for both Service 1 and 2
 # Include the docker compose YAML file in each service here as well
+
+version: '3'
+services:
+  service1:
+    build: 
+      context: ./service1
+    container_name: service1-production
+    image: service1-production
+    networks:
+     pleno-network:
+       ipv4_address: 172.18.0.2
+    ports:
+      - 8080:8080
+    command: ["./service1"]
+
+  service2:
+    build: 
+      context: ./service2
+    container_name: service2-production
+    image: service2-production
+    networks:
+     pleno-network:
+       ipv4_address: 172.18.0.3
+    ports:
+      - 8081:8081
+    command: ["./service2"]
+
+networks:
+  pleno-network:
+    driver: bridge
+    external: true
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/16
+
+
+
+

@@ -4,7 +4,7 @@
 # Prod
 
 FROM rust:1.76-buster as Build
-RUN  cargo new service2
+RUN USER=root cargo new --bin service2
 WORKDIR /service2
 COPY  ./Cargo.toml .
 COPY  ./src/main.rs .
