@@ -32,7 +32,7 @@ jobs:
       run: cargo test --verbose --manifest-path service1/Cargo.toml
     - name: Lint
       run: cargo fmt --manifest-path service1/Cargo.toml -- --check  && cargo clippy --manifest-path service1/Cargo.toml -- -D warnings 
-    - name: Coverage
-      run: cargo tarpaulin --out Xml --manifest-path service1/Cargo.toml
-    
+    - name: Coverage using tarpaulin
+      run: cargo install cargo-tarpaulin && cargo tarpaulin --out Xml --manifest-path service1/Cargo.toml
+  
 
