@@ -1,1 +1,33 @@
 # Write CI: build, lint (fmt and clippy), test with tarpaulin
+
+
+on: [push, pull_request]
+
+name: Service 1 CI
+
+jobs:
+  CI:
+    name: check , build , test , lint and coverage
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout the source
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+    - name: install stable toolchain
+      uses: actions/setup-rust@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - name: Build
+      run: cargo build --verbose
+    - name: Test
+      run: cargo test --verbose
+    - name: Lint
+      run: cargo fmt -- --check && cargo clippy -- -D warnings
+    - name: Coverage
+      uses: tarpaulin-ci/tarpaulin/tarpaulin-action@v2
+      run: cargo tarpaulin --out Xml
+    
+

@@ -1,1 +1,38 @@
 # Write your Kubernetes settings here
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service1
+spec:
+  selector:
+    app: service1
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: my-app
+  template:
+    metadata:
+      labels:
+        app: my-app
+    spec:
+      containers:
+        - name: my-container
+          image: gcr.io/my-project/my-image:latest
+          ports:
+            - containerPort: 8080
+#
+apiVersion: apps/v1
+kind: Deployment
+
