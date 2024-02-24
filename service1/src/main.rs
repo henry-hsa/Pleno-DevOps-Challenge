@@ -16,7 +16,7 @@ async fn ping_service2() -> Result<HttpResponse, Error>  {
     let client = Client::new();
 
     for _ in 0..MAX_RETRIES {
-        match client.post("http://172.18.0.3:8081/pong").send().await {
+        match client.post("http://172.25.0.3:8081/pong").send().await {
             Ok(mut response) => {
                 let body = response.body().await?;
                 return Ok(HttpResponse::Ok().body(body));
@@ -34,7 +34,7 @@ async fn ping_service2() -> Result<HttpResponse, Error>  {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
-            .allowed_origin("http://172.18.0.3:8081");
+            .allowed_origin("http://172.25.0.3:8081");
 
         App::new()
             .wrap(cors)
