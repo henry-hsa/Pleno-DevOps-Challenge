@@ -27,9 +27,9 @@ jobs:
         toolchain: stable
         override: true
     - name: Build
-      run: cargo build --verbose
+      run: cargo build --verbose --manifest-path service1/Cargo.toml
     - name: Test
-      run: cargo test --verbose
+      run: cargo test --verbose 
     - name: Lint
       run: cargo fmt -- --check && cargo clippy -- -D warnings
     - name: Coverage
