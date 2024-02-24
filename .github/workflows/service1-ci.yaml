@@ -1,7 +1,7 @@
 # Write CI: build, lint (fmt and clippy), test with tarpaulin
 
 
-on: [push, pull_request]
+on: [push]
 
 name: Service 1 CI
 
