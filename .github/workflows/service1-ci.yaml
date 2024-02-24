@@ -31,8 +31,8 @@ jobs:
     - name: Test
       run: cargo test --verbose --manifest-path service1/Cargo.toml
     - name: Lint
-      run: cargo fmt -- --check && cargo clippy -- -D warnings --manifest-path service1/Cargo.toml
+      run: cargo fmt -- --check --manifest-path service1/Cargo.toml && cargo clippy -- -D warnings --manifest-path service1/Cargo.toml
     - name: Coverage
-      run: cargo tarpaulin --out Xml
+      run: cargo tarpaulin --out Xml --manifest-path service1/Cargo.toml
     
 
