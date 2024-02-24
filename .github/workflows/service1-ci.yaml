@@ -29,7 +29,7 @@ jobs:
     - name: Build
       run: cargo build  --manifest-path service1/Cargo.toml
     - name: Test
-      run: cargo test --verbose 
+      run: cargo test --verbose --manifest-path service1/Cargo.toml
     - name: Lint
       run: cargo fmt -- --check && cargo clippy -- -D warnings
     - name: Coverage
