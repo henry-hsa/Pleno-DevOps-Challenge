@@ -15,7 +15,8 @@ async fn pong() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
-            .allowed_origin("http://172.18.0.2:8080");
+ //           .allowed_origin("http://172.18.0.2:8080");
+            .allowed_origin_fn(|_, _| true);
 
         App::new()
             .wrap(cors)

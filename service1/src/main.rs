@@ -1,3 +1,4 @@
+
 use actix_web::{get, App, HttpResponse, HttpServer, Responder, Error};
 use actix_cors::Cors;
 use awc::Client;
@@ -34,8 +35,7 @@ async fn ping_service2() -> Result<HttpResponse, Error>  {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
-            .allowed_origin("http://172.18.0.3:8081");
-
+            .allowed_origin_fn(|_, _| true);
         App::new()
             .wrap(cors)
             .service(hello)
@@ -54,12 +54,12 @@ mod tests {
     #[actix_rt::test]
     async fn test_hello() {
         let mut app = test::init_service(App::new().service(hello)).await;
-        
+
         let req = TestRequest::get().uri("/").to_request();
         let resp = test::call_service(&mut app, req).await;
 
         assert_eq!(resp.status(), actix_web::http::StatusCode::OK);
-        
+
         let body = test::read_body(resp).await;
         assert_eq!(body, "Hello world in service 1!");
     }
