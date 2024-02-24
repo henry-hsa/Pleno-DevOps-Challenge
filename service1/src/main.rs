@@ -62,4 +62,5 @@ mod tests {
         let body = test::read_body(resp).await;
         assert_eq!(body, "Hello world in service 1!");
     }
-}
+ }
+ 
