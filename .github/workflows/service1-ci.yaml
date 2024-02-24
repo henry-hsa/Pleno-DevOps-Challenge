@@ -27,7 +27,7 @@ jobs:
         toolchain: stable
         override: true
     - name: Build
-      run: cargo build --verbose --manifest-path service1/Cargo.toml
+      run: cargo build  --manifest-path service1/Cargo.toml
     - name: Test
       run: cargo test --verbose 
     - name: Lint
