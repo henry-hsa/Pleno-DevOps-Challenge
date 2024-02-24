@@ -1,5 +1,5 @@
-use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 use actix_cors::Cors;
+use actix_web::{get, post, App, HttpResponse, HttpServer, Responder};
 
 #[get("/")]
 async fn hello() -> impl Responder {
@@ -15,13 +15,10 @@ async fn pong() -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         let cors = Cors::default()
- //           .allowed_origin("http://172.18.0.2:8080");
+            //           .allowed_origin("http://172.18.0.2:8080");
             .allowed_origin_fn(|_, _| true);
 
-        App::new()
-            .wrap(cors)
-            .service(hello)
-            .service(pong)
+        App::new().wrap(cors).service(hello).service(pong)
     })
     .bind("0.0.0.0:8081")?
     .run()
@@ -36,12 +33,12 @@ mod tests {
     #[actix_rt::test]
     async fn test_hello() {
         let mut app = test::init_service(App::new().service(hello)).await;
-        
+
         let req = TestRequest::get().uri("/").to_request();
         let resp = test::call_service(&mut app, req).await;
 
         assert_eq!(resp.status(), actix_web::http::StatusCode::OK);
-        
+
         let body = test::read_body(resp).await;
         assert_eq!(body, "Hello world in service 2!");
     }
