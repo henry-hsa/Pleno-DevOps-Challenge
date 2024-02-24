@@ -1,7 +1,9 @@
 # Write CI: build, lint (fmt and clippy), test with tarpaulin
 
 
-on: [push]
+on: [push , pull_request]
+ branches: 
+    - trunk
 
 name: Service 1 CI
 
