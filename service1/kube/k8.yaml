@@ -4,7 +4,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: service1-VERSION
-  namespace: dev-container
 spec:
   replicas: 1
   selector:
@@ -48,7 +47,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: service2-VERSION
-  namespace: dev-container
 spec:
   replicas: 1
   selector:
