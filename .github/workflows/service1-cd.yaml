@@ -65,7 +65,7 @@ jobs:
         sleep 400
         # check the roolout status
         kubectl rollout status deployment service1-${VERSION}
-        sleep 60
+        sleep 180
       working-directory: service1   
 
     - name: cleans up the old deployment
