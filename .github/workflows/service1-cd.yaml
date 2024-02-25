@@ -62,10 +62,10 @@ jobs:
         sed -i "s/VERSION/$VERSION/g; s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" kube/k8.yaml
         # deployment and service
         kubectl apply -f kube/k8.yaml
-        sleep 400
+        sleep 300
         # check the roolout status
         kubectl rollout status deployment service1-${VERSION}
-        sleep 180
+        sleep 120
       working-directory: service1   
 
     - name: cleans up the old deployment
