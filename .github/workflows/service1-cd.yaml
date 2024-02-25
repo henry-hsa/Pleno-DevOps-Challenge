@@ -17,28 +17,36 @@ jobs:
     steps:
     - name: checkout the source
       uses: actions/checkout@v2
+
     - name: Set authetication with gcloud
       uses: google-github-actions/auth@v2
       with:
         credentials_json: ${{ secrets.GCLOUD_CREDENTIALS }}
+
     - name: Set gcloud sdk
       uses: google-github-actions/setup-gcloud@v2
+
     - name: install kubectl
       run: gcloud components install kubectl
+
     - name: print the kubectl version
       run: kubectl version --client
+
     - name: print gcloud info
       run: gcloud info
+
     - name: docker auhtentication
       run: gcloud auth configure-docker  asia-southeast2-docker.pkg.dev --quiet
+
     - name: set version  for the docker image into git rev-parse
       run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
     - name: build and push docker image into google cloud artifact registry
       env:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         VERSION: ${{ steps.version.outputs.VERSION }}
       run: |
-        DOCKER_IMAGE="asia-southeast2-docker.pkg.dev/${GOOGLE_PROJECT}/images/service2-production:${VERSION}"
+        DOCKER_IMAGE="asia-southeast2-docker.pkg.dev/${GOOGLE_PROJECT}/images/service2:${VERSION}"
         gcloud auth configure-docker asia-southeast2-docker.pkg.dev 
         docker build -t $DOCKER_IMAGE -f service1/docker/Dockerfile.prod .
         docker push $DOCKER_IMAGE
