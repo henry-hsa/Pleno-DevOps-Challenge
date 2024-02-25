@@ -1,1 +1,35 @@
 # Write CI: build, lint (fmt and clippy), test with tarpaulin
+
+on:
+  push:
+    branches:
+      - trunk
+  pull_request:
+    branches:
+      - trunk
+
+name: Service 2 CI
+
+jobs:
+  CI:
+    name: check , build , test , lint and coverage
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout the source
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 1
+    - name: install stable toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        override: true
+    - name: Build
+      run: cargo build  --manifest-path service2/Cargo.toml
+    - name: Test
+      run: cargo test --verbose --manifest-path service2/Cargo.toml
+    - name: Lint
+      run: cargo fmt --manifest-path service2/Cargo.toml -- --check  && cargo clippy --manifest-path service2/Cargo.toml -- -D warnings 
+    - name: Coverage using tarpaulin
+      run: cargo install cargo-tarpaulin && cargo tarpaulin --out Xml --manifest-path service2/Cargo.toml
