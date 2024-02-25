@@ -52,14 +52,14 @@ jobs:
         docker push $DOCKER_IMAGE
       working-directory: service1  
 
-    - name: deploy into gke
+    - name: deploy into GKE cluster
       env:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         VERSION: ${{ env.VERSION }}
       run: |
         # setting GKE  credentials
         gcloud container clusters get-credentials gke-cluster --region asia-southeast2
-        sed -i "s|<VERSION>|${VERSION}|g" kube/k8.yaml
+        sed -i "s/VERSION/$VERSION/g; s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" kube/k8.yaml
         # deployment and service
         kubectl apply -f kube/k8.yaml
         sleep 400
