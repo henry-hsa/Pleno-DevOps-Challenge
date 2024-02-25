@@ -33,6 +33,4 @@ jobs:
       run: cargo fmt --manifest-path service2/Cargo.toml -- --check  && cargo clippy --manifest-path service2/Cargo.toml -- -D warnings 
     - name: Coverage using tarpaulin
       run: cargo install cargo-tarpaulin && cargo tarpaulin --out Xml --manifest-path service2/Cargo.toml
-    - name: Build docker
-      run: docker build -t service2-production:latest -f docker/Dockerfile.prod .
-      working-directory: service2
+      
