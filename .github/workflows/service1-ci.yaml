@@ -35,6 +35,6 @@ jobs:
     - name: Coverage using tarpaulin
       run: cargo install cargo-tarpaulin && cargo tarpaulin --out Xml --manifest-path service1/Cargo.toml
     - name: Build docker
-      run: docker build -t service1-production:latest -f service1/docker/Dockerfile.prod .
-  
+      run: docker build -t service1-production:latest -f docker/Dockerfile.prod .
+      working-directory: service1
 
