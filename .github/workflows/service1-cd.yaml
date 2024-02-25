@@ -20,7 +20,7 @@ jobs:
     - name: Set authetication with gcloud
       uses: google-github-actions/auth@v2
       with:
-        credentials: ${{ secrets.GCLOUD_CREDENTIALS }}
+        credentials_json: ${{ secrets.GCLOUD_CREDENTIALS }}
     - name: Set gcloud sdk
       uses: google-github-actions/setup-gcloud@v2
     - name: install kubectl
