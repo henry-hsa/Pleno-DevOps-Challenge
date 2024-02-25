@@ -44,7 +44,7 @@ jobs:
     - name: build and push docker image into google cloud artifact registry
       env:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
-        VERSION: ${{ steps.version.outputs.VERSION }}
+        VERSION: ${{ env.VERSION }}
       run: |
         DOCKER_IMAGE="asia-southeast2-docker.pkg.dev/${GOOGLE_PROJECT}/images/service2:${VERSION}"
         gcloud auth configure-docker asia-southeast2-docker.pkg.dev 
