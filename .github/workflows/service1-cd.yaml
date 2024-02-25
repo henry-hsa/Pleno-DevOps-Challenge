@@ -38,7 +38,7 @@ jobs:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
         VERSION: ${{ steps.version.outputs.VERSION }}
       run: |
-        DOCKER_IMAGE=asia-southeast2-docker.pkg.dev/${GOOGLE_PROJECT}/service2-production:${VERSION}
+        DOCKER_IMAGE="asia-southeast2-docker.pkg.dev/${GOOGLE_PROJECT}/service2-production:${VERSION}"
         gcloud auth configure-docker asia-southeast2-docker.pkg.dev 
         docker build -t $DOCKER_IMAGE -f service1/docker/Dockerfile.prod .
         docker push $DOCKER_IMAGE
