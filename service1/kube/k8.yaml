@@ -5,7 +5,7 @@ kind: Deployment
 metadata:
   name: service1-VERSION
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels: 
       name: service1
@@ -61,7 +61,7 @@ spec:
     spec:
       containers:
       - name: service2
-        image: "asia-southeast2-docker.pkg.dev/$GOOGLE_PROJECT/images/service2:VERSION"
+        image: "asia-southeast2-docker.pkg.dev/GOOGLE_PROJECT/images/service2:VERSION"
         ports:
         - name: http
           containerPort: 8081
