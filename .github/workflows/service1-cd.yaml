@@ -31,8 +31,8 @@ jobs:
       run: gcloud info
     - name: docker auhtentication
       run: gcloud auth configure-docker  asia-southeast2-docker.pkg.dev --quiet
-    - name: set version  for the docker image into git rev-list
-      run: echo "VERSION=$((git rev-list --short HEAD))" >> $GITHUB_OUPUT
+    - name: set version  for the docker image into git rev-parse
+      run: echo "VERSION=$((git rev-parse --short HEAD))" >> $GITHUB_OUPUT
     - name: build and push docker image into google cloud artifact registry
       env:
         GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
