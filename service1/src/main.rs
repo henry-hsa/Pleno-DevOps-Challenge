@@ -38,11 +38,11 @@ async fn ping_service2() -> Result<HttpResponse, Error> {
         }
     }
 
-     if responses.is_empty() { 
+    if responses.is_empty() {
         Err(actix_web::error::ErrorInternalServerError(
-        "Service2 is not responding"
-    ))
-    }  else {
+            "Service2 is not responding",
+        ))
+    } else {
         Ok(HttpResponse::Ok().body(format!("{:?}", responses)))
     }
 }
