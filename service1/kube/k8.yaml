@@ -32,6 +32,7 @@ metadata:
   labels:
     name: service1
 spec:
+  type: LoadBalancer
   ports:
   - name: http
     port: 8080
@@ -39,7 +40,7 @@ spec:
   selector:
     name: service1
     version: "VERSION"
-    type: LoadBalancer
+    
 
 
 ---
@@ -76,6 +77,7 @@ metadata:
   labels:
     name: service2
 spec:
+  type: LoadBalancer
   ports:
   - name: http
     port: 8081
@@ -83,4 +85,4 @@ spec:
   selector:
     name: service2
     version: "VERSION"
-    type: LoadBalancer
+    
