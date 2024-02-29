@@ -51,3 +51,96 @@ jobs:
         docker build -t $DOCKER_IMAGE -f docker/Dockerfile.prod .
         docker push $DOCKER_IMAGE
       working-directory: service2    
+# Write CD: send the dockerized service to your gcp
+
+on:
+  push:
+    branches:
+      - trunk
+  pull_request:
+    branches:
+      - trunk
+
+name: Service 1 CD
+
+jobs:
+  CD:
+    name: Build and push the docker image into google cloud
+    runs-on: ubuntu-latest
+    steps:
+    - name: checkout the source
+      uses: actions/checkout@v4.1.1
+
+    - name: Set authetication with gcloud
+      uses: google-github-actions/auth@v2
+      with:
+        credentials_json: ${{ secrets.GCLOUD_CREDENTIALS }}
+
+    - name: Set gcloud sdk
+      uses: google-github-actions/setup-gcloud@v2
+
+    - name: install kubectl
+      run: gcloud components install kubectl
+
+    - name: print the kubectl version
+      run: kubectl version --client
+
+    - name: print gcloud info
+      run: gcloud info
+
+    - name: docker authencation
+      run: gcloud auth configure-docker  asia-southeast2-docker.pkg.dev --quiet
+
+    - name: set version  for the docker image into git rev-parse
+      run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+    - name: build and push docker image into google cloud artifact registry
+      env:
+        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        VERSION: ${{ env.VERSION }}
+      run: |
+        DOCKER_IMAGE="asia-southeast2-docker.pkg.dev/${GOOGLE_PROJECT}/images/service1:${VERSION}"
+        gcloud auth configure-docker asia-southeast2-docker.pkg.dev 
+        docker build -t $DOCKER_IMAGE -f docker/Dockerfile.prod .
+        docker push $DOCKER_IMAGE
+      working-directory: service1  
+
+    - name: deploy into GKE cluster
+      env:
+        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+        VERSION: ${{ env.VERSION }}
+      run: |
+        # setting GKE  credentials
+        gcloud container clusters get-credentials gke-cluster --region asia-southeast2
+        sed -i "s/VERSION/$VERSION/g; s/GOOGLE_PROJECT/$GOOGLE_PROJECT/g" kube/k8.yaml
+        # deployment and service
+        kubectl apply -f kube/k8-services2.yaml
+        sleep 300
+        # check the roolout status
+        kubectl rollout status deployment service2-${VERSION}
+        sleep 120
+      working-directory: service2   
+
+    - name: cleans up the old deployment
+      env:
+        GOOGLE_PROJECT: ${{ secrets.GOOGLE_PROJECT }}
+      run: |
+        # get the name of all deployment container
+        all_container=$(kubectl get deployment -o json --sort-by=.metadata.creationTimestamp | jq -r '.items[] | .metadata.name')
+
+        # get the name of the four latest deployment container
+        latest_container=$(echo "$all_container" | tail -n 2cd ..)
+
+        # get the name of all deployment container except the four latest
+        old_container=$(comm -23 <(echo "$all_container" | sort) <(echo "$latest_container" | sort))
+
+        # delete the old deployment container 
+        #for container in $old_container; do
+        #  kubectl delete deployment $container
+        #done
+
+        # get the list for awaraness
+        for container in $all_container; do
+          kubectl get deployment $container
+        done
+        

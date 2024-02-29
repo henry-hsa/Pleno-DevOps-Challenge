@@ -76,7 +76,7 @@ jobs:
         all_container=$(kubectl get deployment -o json --sort-by=.metadata.creationTimestamp | jq -r '.items[] | .metadata.name')
 
         # get the name of the four latest deployment container
-        latest_container=$(echo "$all_container" | tail -n 4)
+        latest_container=$(echo "$all_container" | tail -n 2)
 
         # get the name of all deployment container except the four latest
         old_container=$(comm -23 <(echo "$all_container" | sort) <(echo "$latest_container" | sort))
