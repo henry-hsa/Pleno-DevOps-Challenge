@@ -15,22 +15,36 @@ async fn hello() -> impl Responder {
 #[get("/ping")]
 async fn ping_service2() -> Result<HttpResponse, Error> {
     let client = Client::new();
+    let ip_ranges = vec!["172.18", "34.101"];
+    let mut responses = Vec::new();
 
-    for _ in 0..MAX_RETRIES {
-        match client.post("http://172.18.0.3:8081/pong").send().await {
-            Ok(mut response) => {
-                let body = response.body().await?;
-                return Ok(HttpResponse::Ok().body(body));
-            }
-            Err(_) => {
-                tokio::time::sleep(Duration::from_secs(RETRY_DELAY)).await;
+    for ip_range in ip_ranges {
+        for i in 0..256 {
+            for j in 0..256 {
+                let ip_address = format!("{}.{}.{}", ip_range, i, j);
+                let url = format!("http://{}:8081/pong", ip_address);
+                for _ in 0..MAX_RETRIES {
+                    match client.post(&url).send().await {
+                        Ok(mut response) => {
+                            let body = response.body().await?;
+                            responses.push(body);
+                        }
+                        Err(_) => {
+                            tokio::time::sleep(Duration::from_secs(RETRY_DELAY)).await;
+                        }
+                    }
+                }
             }
         }
     }
 
-    Err(actix_web::error::ErrorInternalServerError(
-        "Service2 is not responding",
+     if responses.is_empty() { 
+        Err(actix_web::error::ErrorInternalServerError(
+        "Service2 is not responding"
     ))
+    }  else {
+        Ok(HttpResponse::Ok().body(format!("{:?}", responses)))
+    }
 }
 
 #[actix_web::main]
