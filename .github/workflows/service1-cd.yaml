@@ -11,7 +11,7 @@ on:
 name: Service 1 CD
 
 jobs:
-  CD:
+  CD1:
     name: Build and push the docker image into google cloud
     runs-on: ubuntu-latest
     steps:
